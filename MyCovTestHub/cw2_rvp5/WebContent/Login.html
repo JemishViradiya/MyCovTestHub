@@ -1,0 +1,97 @@
+<html>
+
+<head>
+<title>login</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<script
+	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+</head>
+
+<body style="background-image: url('assets/images/mbr-1920x1080.jpg');">
+	
+
+	<div class="container">
+		<h2 style=" color:  #f44336;">Login</h2>
+		<form class="form-horizontal" id="form">
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="uname">UserName:</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="uname"
+						placeholder="Enter username" name="uname" required>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="psw">Password:</label>
+				<div class="col-sm-10">
+					<input type="password" class="form-control" id="psw"
+						placeholder="Enter password" name="psw" required>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-default" name="submit"
+						id="submit" style="border: 1px solid #f44336" >Login</button>
+				</div>
+			</div>
+		</form>
+
+
+		<div class="alert alert-success" id="success" style="display: none">
+		</div>
+		<div class="alert alert-warning" id="error" style="display: none">
+		</div>
+
+	</div>
+
+	<script>
+		$(function() {
+			var successmsg = $("#success");
+			var failmsg = $("#error");
+
+			$("#form").submit(function(e) {
+				e.preventDefault();
+				$.ajax({
+					type : "POST",
+					url : "./servlets/Login",
+					data : {
+						email : $("#uname").val(),
+						psw : $("#psw").val()
+					},
+					success : function(result) {
+						var ret = jQuery.parseJSON(result);
+
+						successmsg.hide();
+						failmsg.hide();
+
+						if (ret.admin == false) {
+							failmsg.html("Invalid username");
+							failmsg.show();
+						} else if (ret.login == true) {
+							successmsg.hide();
+							failmsg.hide();
+							window.location.href = "data.jsp";
+
+						} else {
+							failmsg.html("Invalid password");
+							failmsg.show();
+						}
+					},
+					error : function(result) {
+						alert("failure");
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>
+
